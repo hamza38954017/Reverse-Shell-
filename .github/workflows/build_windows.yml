@@ -1,0 +1,39 @@
+name: Build Windows Application
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Display system info
+      run: |
+        echo "System Info:"
+        systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
+        echo "Compiler version:"
+        cl.exe
+
+    - name: Compile with MSVC
+      run: |
+        cl.exe /EHsc /Fe:lab_practice_v3.exe main.cpp /link /SUBSYSTEM:WINDOWS
+      shell: cmd
+
+    - name: Verify compilation
+      run: |
+        dir *.exe
+        echo "Checking if executable was created..."
+        if exist lab_practice_v3.exe (echo SUCCESS: Executable created!) else (echo ERROR: Executable not found!)
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Windows-Executable
+        path: lab_practice_v3.exe
+        if-no-files-found: error
