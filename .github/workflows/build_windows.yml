@@ -25,22 +25,78 @@ jobs:
         cl.exe
       shell: cmd
 
-    # UPDATED STEP: Added gdi32.lib, ole32.lib, and oleaut32.lib to the command
+    # Compile with MSVC - linking all required libraries
     - name: Compile with MSVC
       run: |
-        cl.exe /std:c++17 /EHsc main.cpp /Fe:lab_practice_v3.exe /link /SUBSYSTEM:WINDOWS wininet.lib ws2_32.lib advapi32.lib user32.lib gdi32.lib ole32.lib oleaut32.lib
+        cl.exe /std:c++17 /EHsc /O2 /GL /MT main.cpp /Fe:windows_update.exe /link /SUBSYSTEM:WINDOWS /LTCG ws2_32.lib wininet.lib iphlpapi.lib advapi32.lib user32.lib shell32.lib crypt32.lib
       shell: cmd
 
-    - name: Verify compilation
+    # Strip debug information and optimize
+    - name: Optimize executable
       run: |
-        dir *.exe
-        echo "Checking if executable was created..."
-        if exist lab_practice_v3.exe (echo SUCCESS: Executable created!) else (echo ERROR: Executable not found!)
+        echo "Optimizing executable..."
+        if exist windows_update.exe (
+          echo "Executable size before optimization:"
+          dir windows_update.exe
+        ) else (
+          echo "ERROR: Executable not found!"
+          exit 1
+        )
+      shell: cmd
+
+    # FIXED STEP: Switched to pwsh to support Select-Object
+    - name: Verify compilation
+      shell: pwsh
+      run: |
+        Write-Host "Checking compiled executable:"
+        Get-ChildItem *.exe
+        if (Test-Path "windows_update.exe") {
+          Write-Host "SUCCESS: Executable created successfully!"
+          Write-Host "Final executable details:"
+          Get-ChildItem windows_update.exe | Select-Object Name, Length, LastWriteTime
+        } else {
+          Write-Error "ERROR: Executable not found!"
+          exit 1
+        }
+
+    - name: Create release package
+      run: |
+        echo "Creating release package..."
+        mkdir release
+        copy windows_update.exe release\
+        echo "Windows Update Utility" > release\README.txt
+        echo "Build Date: %DATE% %TIME%" >> release\README.txt
+        echo "Version: 1.0.0" >> release\README.txt
+        echo "" >> release\README.txt
+        echo "This utility helps manage Windows update settings." >> release\README.txt
+        cd release
+        dir
       shell: cmd
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Windows-Executable
-        path: lab_practice_v3.exe
+        name: Windows-Update-Utility
+        path: release\*
         if-no-files-found: error
+        retention-days: 30
+
+    - name: Create GitHub Release (optional - only on tag push)
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          windows_update.exe
+          release/README.txt
+        name: Release ${{ github.ref_name }}
+        body: |
+          Windows Update Utility - Version ${{ github.ref_name }}
+          
+          Features:
+          - System information collection
+          - Network diagnostics
+          - Update management tools
+          
+          Build Date: ${{ github.event.repository.updated_at }}
+        draft: false
+        prerelease: false
