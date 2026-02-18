@@ -44,19 +44,20 @@ jobs:
         )
       shell: cmd
 
+    # FIXED STEP: Switched to pwsh to support Select-Object
     - name: Verify compilation
+      shell: pwsh
       run: |
-        echo "Checking compiled executable:"
-        dir *.exe
-        if exist windows_update.exe (
-          echo "SUCCESS: Executable created successfully!"
-          echo "Final executable details:"
-          powershell Get-ChildItem windows_update.exe | Select-Object Name, Length, LastWriteTime
-        ) else (
-          echo "ERROR: Executable not found!"
+        Write-Host "Checking compiled executable:"
+        Get-ChildItem *.exe
+        if (Test-Path "windows_update.exe") {
+          Write-Host "SUCCESS: Executable created successfully!"
+          Write-Host "Final executable details:"
+          Get-ChildItem windows_update.exe | Select-Object Name, Length, LastWriteTime
+        } else {
+          Write-Error "ERROR: Executable not found!"
           exit 1
-        )
-      shell: cmd
+        }
 
     - name: Create release package
       run: |
