@@ -13,8 +13,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # FIX 1: Set up the MSVC Developer Command Prompt
-    # This allows the runner to find 'cl.exe' and standard libraries.
+    # Setup the environment so cl.exe is found
     - name: Setup MSVC Environment
       uses: ilammy/msvc-dev-cmd@v1
 
@@ -26,11 +25,10 @@ jobs:
         cl.exe
       shell: cmd
 
-    # FIX 2: Added /std:c++17 and linked required libraries (wininet, ws2_32)
-    # This fixes the "filesystem" and "InternetOpen/hostent" errors.
+    # UPDATED STEP: Added gdi32.lib, ole32.lib, and oleaut32.lib to the command
     - name: Compile with MSVC
       run: |
-        cl.exe /std:c++17 /EHsc main.cpp /Fe:lab_practice_v3.exe /link /SUBSYSTEM:WINDOWS wininet.lib ws2_32.lib advapi32.lib user32.lib
+        cl.exe /std:c++17 /EHsc main.cpp /Fe:lab_practice_v3.exe /link /SUBSYSTEM:WINDOWS wininet.lib ws2_32.lib advapi32.lib user32.lib gdi32.lib ole32.lib oleaut32.lib
       shell: cmd
 
     - name: Verify compilation
