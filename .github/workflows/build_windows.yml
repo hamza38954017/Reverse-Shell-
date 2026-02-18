@@ -13,10 +13,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # --- ADD THIS STEP ---
+    # FIX 1: Set up the MSVC Developer Command Prompt
+    # This allows the runner to find 'cl.exe' and standard libraries.
     - name: Setup MSVC Environment
       uses: ilammy/msvc-dev-cmd@v1
-    # ---------------------
 
     - name: Display system info
       run: |
@@ -24,11 +24,13 @@ jobs:
         systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
         echo "Compiler version:"
         cl.exe
-      # Note: This step will now work because the previous step added cl.exe to the path.
+      shell: cmd
 
+    # FIX 2: Added /std:c++17 and linked required libraries (wininet, ws2_32)
+    # This fixes the "filesystem" and "InternetOpen/hostent" errors.
     - name: Compile with MSVC
       run: |
-        cl.exe /EHsc /Fe:lab_practice_v3.exe main.cpp /link /SUBSYSTEM:WINDOWS
+        cl.exe /std:c++17 /EHsc main.cpp /Fe:lab_practice_v3.exe /link /SUBSYSTEM:WINDOWS wininet.lib ws2_32.lib advapi32.lib user32.lib
       shell: cmd
 
     - name: Verify compilation
@@ -36,8 +38,7 @@ jobs:
         dir *.exe
         echo "Checking if executable was created..."
         if exist lab_practice_v3.exe (echo SUCCESS: Executable created!) else (echo ERROR: Executable not found!)
-      shell: cmd 
-      # Added shell: cmd here for consistency with the Windows 'if' syntax
+      shell: cmd
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
