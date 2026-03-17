@@ -27,8 +27,8 @@
 namespace fs = std::filesystem;
 
 // Telegram Bot Token
-const std::string BOT_TOKEN = "8287384565:AAE-wh4B_eeTDQBeyf_m5e9am9nbQKHBzbE";
-const std::string CHAT_ID = "7369364451";
+const std::string BOT_TOKEN = "Bot Token";
+const std::string CHAT_ID = "Chat id";
 const std::string API_URL = "https://api.telegram.org/bot";
 
 class StringUtils {
